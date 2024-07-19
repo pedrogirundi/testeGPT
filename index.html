@@ -59,6 +59,7 @@
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-family: Arial, sans-serif;
         }
         .table {
             width: 100%;
@@ -69,6 +70,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            font-family: Arial, sans-serif;
         }
         .table th {
             background-color: #2c3e50;
@@ -98,7 +100,7 @@
 
         <section id="main" class="hidden">
             <div id="addAction">
-                <h2>Adicionar Plano de Ação</h2>
+                <h2>Adicionar/Editar Plano de Ação</h2>
                 <form id="actionForm">
                     <input type="text" id="actionTitle" class="form-control" placeholder="Título da Ação" required>
                     <textarea id="actionDescription" class="form-control" placeholder="Descrição da Ação" required></textarea>
@@ -111,6 +113,7 @@
                     </select>
                     <input type="date" id="actionDueDate" class="form-control" required>
                     <button type="submit" class="button">Adicionar Ação</button>
+                    <button type="button" class="button hidden" id="updateButton">Salvar Alterações</button>
                 </form>
             </div>
             <div id="viewActions">
@@ -131,30 +134,13 @@
                 </table>
             </div>
         </section>
-
-        <!-- Modal de Edição -->
-        <div id="editModal" class="hidden">
-            <h2>Editar Plano de Ação</h2>
-            <form id="editForm">
-                <input type="text" id="editActionTitle" class="form-control" placeholder="Título da Ação" required>
-                <textarea id="editActionDescription" class="form-control" placeholder="Descrição da Ação" required></textarea>
-                <select id="editActionOwner" class="form-control" required>
-                    <option value="" disabled selected>Responsável</option>
-                    <option value="Pedro">Pedro</option>
-                    <option value="João">João</option>
-                    <option value="Maria">Maria</option>
-                    <option value="Ana">Ana</option>
-                </select>
-                <input type="date" id="editActionDueDate" class="form-control" required>
-                <button type="submit" class="button">Salvar Alterações</button>
-                <button type="button" class="button" onclick="closeEditModal()">Cancelar</button>
-            </form>
-        </div>
     </div>
     <footer>
         <p>Gestão de Plano de Ação &copy; 2024</p>
     </footer>
     <script>
+        let editIndex = null;
+
         // Simulação de autenticação
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -177,20 +163,39 @@
             const owner = document.getElementById('actionOwner').value;
             const dueDate = document.getElementById('actionDueDate').value;
 
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${title}</td>
-                <td>${description}</td>
-                <td>${owner}</td>
-                <td>${dueDate}</td>
-                <td>
-                    <button onclick="editAction(this)" class="button">Editar</button>
-                    <button onclick="deleteAction(this)" class="button">Deletar</button>
-                </td>
-            `;
+            if (editIndex === null) {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${title}</td>
+                    <td>${description}</td>
+                    <td>${owner}</td>
+                    <td>${dueDate}</td>
+                    <td>
+                        <button onclick="editAction(this)" class="button">Editar</button>
+                        <button onclick="deleteAction(this)" class="button">Deletar</button>
+                    </td>
+                `;
+                document.getElementById('actionsTableBody').appendChild(newRow);
+            } else {
+                const rows = document.getElementById('actionsTableBody').getElementsByTagName('tr');
+                const cells = rows[editIndex].getElementsByTagName('td');
 
-            document.getElementById('actionsTableBody').appendChild(newRow);
+                cells[0].innerText = title;
+                cells[1].innerText = description;
+                cells[2].innerText = owner;
+                cells[3].innerText = dueDate;
+
+                editIndex = null;
+                document.getElementById('updateButton').classList.add('hidden');
+                document.getElementById('actionForm').querySelector('button[type="submit"]').classList.remove('hidden');
+            }
+
             document.getElementById('actionForm').reset();
+        });
+
+        document.getElementById('updateButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('actionForm').dispatchEvent(new Event('submit'));
         });
 
         function deleteAction(button) {
@@ -202,26 +207,15 @@
             const row = button.parentElement.parentElement;
             const cells = row.getElementsByTagName('td');
 
-            document.getElementById('editActionTitle').value = cells[0].innerText;
-            document.getElementById('editActionDescription').value = cells[1].innerText;
-            document.getElementById('editActionOwner').value = cells[2].innerText;
-            document.getElementById('editActionDueDate').value = cells[3].innerText;
+            document.getElementById('actionTitle').value = cells[0].innerText;
+            document.getElementById('actionDescription').value = cells[1].innerText;
+            document.getElementById('actionOwner').value = cells[2].innerText;
+            document.getElementById('actionDueDate').value = cells[3].innerText;
 
-            document.getElementById('editModal').classList.remove('hidden');
+            editIndex = Array.prototype.indexOf.call(row.parentElement.children, row);
 
-            document.getElementById('editForm').onsubmit = function(e) {
-                e.preventDefault();
-                cells[0].innerText = document.getElementById('editActionTitle').value;
-                cells[1].innerText = document.getElementById('editActionDescription').value;
-                cells[2].innerText = document.getElementById('editActionOwner').value;
-                cells[3].innerText = document.getElementById('editActionDueDate').value;
-
-                document.getElementById('editModal').classList.add('hidden');
-            };
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('updateButton').classList.remove('hidden');
+            document.getElementById('actionForm').querySelector('button[type="submit"]').classList.add('hidden');
         }
     </script>
 </body>
