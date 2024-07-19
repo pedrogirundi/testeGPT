@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Plano de Ação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        #main {
+            padding: 20px;
+            background: #fff;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            color: #fff;
+            background: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background: #555;
+        }
+        .form-control {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .table th {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestão de Plano de Ação</h1>
+    </header>
+    <div class="container">
+        <section id="main">
+            <div id="addAction">
+                <h2>Adicionar Plano de Ação</h2>
+                <form id="actionForm">
+                    <input type="text" id="actionTitle" class="form-control" placeholder="Título da Ação" required>
+                    <textarea id="actionDescription" class="form-control" placeholder="Descrição da Ação" required></textarea>
+                    <input type="text" id="actionOwner" class="form-control" placeholder="Responsável" required>
+                    <input type="date" id="actionDueDate" class="form-control" required>
+                    <button type="submit" class="button">Adicionar Ação</button>
+                </form>
+            </div>
+            <div id="viewActions">
+                <h2>Ações Cadastradas</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Descrição</th>
+                            <th>Responsável</th>
+                            <th>Data de Conclusão</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="actionsTableBody">
+                        <!-- Actions will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>Gestão de Plano de Ação &copy; 2024</p>
+    </footer>
+    <script>
+        // JavaScript code to manage actions will go here
+    </script>
+</body>
+</html>
